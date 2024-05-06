@@ -41,7 +41,8 @@ set -gx fish_user_paths \
     /usr/local/lib/ruby/gems/3.4.2/bin \
     /usr/local/opt/ruby/bin \
     /usr/local/opt/llvm/bin \
-    /usr/local/opt/binutils/bin \
+    # binutils bin may break some clang builds
+    # /usr/local/opt/binutils/bin \
     /usr/local/sbin \
     /usr/local/bin \
     /usr/sbin \
@@ -123,7 +124,7 @@ function dotenv --description 'Load environment variables from .env file'
             set -xg (echo $line | cut -d = -f 1) (echo $line | cut -d = -f 2-)
         end
 
-        set -xg __PYENV_ACTIVATE 1
+        set -xg __DOTENV_ACTIVATE 1
 
         # Rewrite _pure_prompt function
         if not functions -q _old_pure_prompt
@@ -132,7 +133,7 @@ function dotenv --description 'Load environment variables from .env file'
 
         # Insert dotenv prefix to prompt
         function _pure_prompt  --inherit-variable envfile --argument-names exit_code
-            if set -q __PYENV_ACTIVATE
+            if set -q __DOTENV_ACTIVATE 
                 echo -n -s (set_color green) "(" $envfile ")" (set_color normal) " "
             end
             _old_pure_prompt $exit_code
@@ -154,7 +155,7 @@ function dotenv-erase --description 'Erase environment variables from given file
         end
     end
 
-    set --erase __PYENV_ACTIVATE
+    set --erase __DOTENV_ACTIVATE
 end
 
 # Alias
