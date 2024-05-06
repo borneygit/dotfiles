@@ -187,7 +187,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 -- End lsp key mapping }}}
 
--- Plugin - jose-elias-alvarez/null-ls.nvim {{{
+-- Plugin - nvimtools/none-ls.nvim {{{
 
 local null_ls = require('null-ls')
 
@@ -217,7 +217,7 @@ null_ls.setup({
       extra_args = { '--profile', 'black', '--ca' },
       runtime_condition = python_null_ls_condition,
     }),
-    null_ls.builtins.diagnostics.ruff.with({
+    require('none-ls.diagnostics.ruff').with({
       runtime_condition = python_null_ls_condition,
     }),
     null_ls.builtins.diagnostics.mypy.with({
@@ -227,18 +227,18 @@ null_ls.setup({
       method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
     }),
     -- C/C++
-    null_ls.builtins.diagnostics.cppcheck.with({
-      args = {
-        '--enable=warning,style,performance,portability',
-        '--inline-suppr',
-        '--template=gcc',
-        '--language=c++',
-        '--std=c++20',
-        '$FILENAME',
-      },
-      filetypes = { 'cpp' },
-      runtime_condition = clang_null_ls_condition,
-    }),
+    --    null_ls.builtins.diagnostics.cppcheck.with({
+    --      args = {
+    --        '--enable=warning,style,performance,portability',
+    --        '--inline-suppr',
+    --        '--template=gcc',
+    --        '--language=c++',
+    --        '--std=c++20',
+    --        '$FILENAME',
+    --      },
+    --      filetypes = { 'cpp' },
+    --      runtime_condition = clang_null_ls_condition,
+    --    }),
     --    null_ls.builtins.diagnostics.cpplint.with({
     --      runtime_condition = clang_null_ls_condition,
     --      args = { '--filter=-runtime/references,-build/include_subdir', '$FILENAME' },
@@ -255,13 +255,13 @@ null_ls.setup({
     -- Golang
     null_ls.builtins.formatting.gofmt,
     -- Rust
-    null_ls.builtins.formatting.rustfmt,
+    require('none-ls.formatting.rustfmt'),
     -- Swift
     null_ls.builtins.formatting.swift_format,
     -- Dart
     null_ls.builtins.formatting.dart_format,
     -- Js/Ts
-    null_ls.builtins.formatting.eslint_d.with({ prefer_local = 'node_modules/.bin' }),
+    require('none-ls.formatting.eslint_d').with({ prefer_local = 'node_modules/.bin' }),
     null_ls.builtins.formatting.prettier.with({
       prefer_local = 'node_modules/.bin',
       filetypes = { 'javascript', 'typescript', 'typescriptreact', 'css' },
