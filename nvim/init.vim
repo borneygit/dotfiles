@@ -52,7 +52,6 @@ Plug 'seblj/nvim-echo-diagnostics'
 "I use another lightweight-but-fast alternative.
 Plug 'erhickey/sig-window-nvim'
 Plug 'Decodetalkers/csharpls-extended-lsp.nvim', { 'for': 'cs' }
-Plug 'Freed-Wu/cppinsights.vim', { 'for': 'cpp' }
 "Plug 'hit9/bitproto', { 'rtp': 'editors/vim', 'for': 'bitproto' }
 "C/C++
 Plug 'https://git.sr.ht/~p00f/godbolt.nvim' "Godbolt - CompilerExplorer
