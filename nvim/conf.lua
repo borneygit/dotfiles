@@ -441,8 +441,7 @@ require('godbolt').setup({
 --- Status Line {{{
 
 -- A global-visible progress bar.
--- ref: https://www.reddit.com/r/neovim/comments/uy3lnh/how_can_i_display_lsp_loading_in_my_statusline/
-function _G.lsp_progress()
+function _G.lsp_progress() ---- 0.9 version
   local lsp_clients = vim.lsp.get_active_clients()
   local lsp_client_names = {}
   for _, client in pairs(lsp_clients) do
@@ -460,6 +459,41 @@ function _G.lsp_progress()
   else
     return 'NO LSP'
   end
+end
+
+function lsp_progress_v010()
+  local clients = vim.lsp.get_clients()
+  if #clients == 0 then
+    return 'NO LSP'
+  end
+  local messages = {}
+  -- format client lsp progress from each client.progress ringbuffer.
+  -- example: 1:clangd(indexing 90%)
+  -- modified from vim.lsp.status() function's source code.
+  for _, c in ipairs(clients) do
+    -- defaults example: '1:clangd'
+    local message = c.id .. ':' .. c.name
+    local percentage = nil
+    local title = nil
+    for progress in c.progress do
+      local value = progress.value
+      if type(value) == 'table' and value.kind and value.title and value.percentage then
+        percentage = math.max(percentage or 0, value.percentage)
+        title = value.title
+      end
+    end
+    if percentage and title then
+      local status = title .. ' ' .. tostring(percentage) .. '%%'
+      message = message .. ' (' .. status .. ')'
+    end
+    messages[#messages + 1] = message
+  end
+  return table.concat(messages, ' ')
+end
+
+-- lsp_progress for neovim 0.10
+if vim.version().minor > 9 then
+	_G.lsp_progress = lsp_progress_v010
 end
 
 require('lualine').setup({
