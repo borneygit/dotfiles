@@ -281,7 +281,7 @@ null_ls.setup({
         group = augroup,
         buffer = bufnr,
         callback = function()
-          vim.lsp.buf.format({ async = false })
+          vim.lsp.buf.format({ async = true })
         end,
       })
     end
@@ -493,7 +493,7 @@ end
 
 -- lsp_progress for neovim 0.10
 if vim.version().minor > 9 then
-	_G.lsp_progress = lsp_progress_v010
+  _G.lsp_progress = lsp_progress_v010
 end
 
 require('lualine').setup({
