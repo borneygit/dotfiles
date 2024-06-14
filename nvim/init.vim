@@ -40,6 +40,7 @@ Plug 'tpope/vim-fugitive' "Git plugin.
 Plug 'lukas-reineke/indent-blankline.nvim', { 'tag': 'v2.20.8' } "Indent guides for Neovim
 Plug 'nvimtools/none-ls.nvim'
 Plug 'nvimtools/none-ls-extras.nvim'
+Plug 'nvim-zh/colorful-winsep.nvim' " Make your nvim window separators colorful
 "Completion & LSP (language protocol server).
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main' }
