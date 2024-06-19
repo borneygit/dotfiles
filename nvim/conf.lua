@@ -530,13 +530,3 @@ require('indent_blankline').setup({
   show_current_context_start = false,
 })
 -- }}}
-
--- colorful-winsep.nvim {{{
-require('colorful-winsep').setup({
-  -- highlight for Window separator
-  hi = {
-    bg = '#16161E',
-    fg = '#cd08bd',
-  }
-})
--- }}}
