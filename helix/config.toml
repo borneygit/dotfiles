@@ -1,0 +1,36 @@
+theme = "onedark"
+
+[editor]
+line-number = "absolute"
+auto-format = false
+auto-save = true
+bufferline = "always"
+completion-trigger-len = 1
+cursorline = true
+idle-timeout = 300
+
+[editor.file-picker]
+hidden = false
+
+[editor.cursor-shape]
+insert = "bar"
+select = "underline"
+
+[editor.statusline]
+
+[editor.lsp]
+display-messages = true
+
+[editor.whitespace.render]
+space = "all"
+tab = "all"
+
+[editor.indent-guides]
+render = true
+character = "╎" # Some characters that work well: "▏", "┆", "┊", "⸽"
+skip-levels = 1
+
+[keys.normal]
+tab = "indent"
+S-tab = "unindent"
+C-S-f = ":format"
