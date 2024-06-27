@@ -6,13 +6,33 @@
 # https://github.com/pure-fish/pure
 # Leader symbol for fish prompt
 set pure_symbol_prompt "\$"
-set pure_color_virtualenv "magenta"
+set pure_color_virtualenv magenta
 set pure_show_jobs true
-set pure_color_jobs "blue"
+set pure_color_jobs blue
 set pure_show_system_time false
 
 # Async prompt
 set -g async_prompt_functions _pure_prompt_git
+# git prompt settings
+set -g __fish_git_prompt_show_informative_status 1
+set -g __fish_git_prompt_showdirtystate 'yes'
+set -g __fish_git_prompt_char_stateseparator ' '
+set -g __fish_git_prompt_char_dirtystate "✖"
+set -g __fish_git_prompt_char_cleanstate "✔"
+set -g __fish_git_prompt_char_untrackedfiles "…"
+set -g __fish_git_prompt_char_stagedstate "●"
+set -g __fish_git_prompt_char_conflictedstate "+"
+set -g __fish_git_prompt_color_dirtystate yellow
+set -g __fish_git_prompt_color_cleanstate green --bold
+set -g __fish_git_prompt_color_invalidstate red
+set -g __fish_git_prompt_color_branch cyan --dim --italics
+
+# don't show any greetings
+set fish_greeting ""
+
+# don't describe the command for darwin
+# https://github.com/fish-shell/fish-shell/issues/6270
+function __fish_describe_command; end
 
 # Basic environments
 set -x SHELL fish
@@ -21,152 +41,27 @@ set -x EDITOR nvim
 set -x LANG en_US.UTF-8
 set -x LC_ALL en_US.UTF-8
 
-# Go
-set -x GOPATH $HOME/dev/gopark
-set -x GO111MODULE on
-
-# https://github.com/tj/n
-# Where node versions stores.
-set -x N_PREFIX $HOME/.n
+set -x HOMEBREW_BOTTLE_DOMAIN https://mirrors.ustc.edu.cn/homebrew-bottles
+set -x HOMEBREW_NO_AUTO_UPDATE 1
 
 # $PATH environment variables
 set -e fish_user_paths
 set -gx fish_user_paths \
-    $HOME/.pyenv/shims \
-    $GOPATH/bin \
-    $HOME/.cargo/bin \
-    $HOME/.dotnet/tools \
-    $N_PREFIX/bin \
-    $HOME/dev/src/flutter/bin \
-    /usr/local/lib/ruby/gems/3.4.2/bin \
-    /usr/local/opt/ruby/bin \
-    /usr/local/opt/llvm/bin \
-    # binutils bin may break some clang builds
-    # /usr/local/opt/binutils/bin \
     /usr/local/sbin \
     /usr/local/bin \
     /usr/sbin \
     /usr/bin \
     /sbin \
     /bin \
-    $HOME/.fzf/bin \
     $fish_user_paths
 
-# Config files directory.
-set -x XDG_CONFIG_HOME $HOME/.config
-
-# oo (Go version manager)
-# https://github.com/hit9/oo
-source $HOME/.oo/env.fish
-
-# homebrew
-# disable auto updates.
-set -x HOMEBREW_NO_AUTO_UPDATE 1
-
-# https://github.com/junegunn/fzf
-set -x FZF_DEFAULT_COMMAND 'fd --type f --exclude .git'
-
-# Rewrite Greeting message
-# https://github.com/jaseg/lolcat
-if not functions -q _old_fish_greeting
-    functions -c fish_greeting _old_fish_greeting
+# >>> vscode initialize >>>
+function code
+    set location "$PWD/$argv"
+    open -n -b "com.microsoft.VSCode" --args $location
 end
-function fish_greeting
-    _old_fish_greeting
-    if type -q fortune and type -q lolcat
-        fortune -s | lolcat -l
-    end
-end
+# <<< vscode initialize <<<
 
-# Display current activated python virtualenv on prompt.
-# Rewrite prompt for pyenv (overriding pure-fish/pure)
-if not functions -q  _old_pure_prompt_virtualenv
-    functions -c _pure_prompt_virtualenv _old_pure_prompt_virtualenv
-end
-function _pure_prompt_virtualenv
-    if set -q PYENV_VERSION
-        # https://github.com/pure-fish/pure/blob/master/functions/_pure_prompt_virtualenv.fish
-        echo -n -s (set_color magenta) "" (basename "$PYENV_VERSION") "" (set_color normal) ""
-    end
-    if set -q VIRTUAL_ENV
-        echo -n -s (set_color magenta) "" (basename "$VIRTUAL_ENV") "" (set_color normal) ""
-    end
-end
+rvm default
 
-
-# Rewrite function fish_user_key_bindings
-if functions -q fish_user_key_bindings
-    if not functions -q _old_fish_user_key_bindings
-        functions -c fish_user_key_bindings _old_fish_user_key_bindings
-    end
-end
-
-function fish_user_key_bindings
-    if functions -q _old_fish_user_key_bindings
-        _old_fish_user_key_bindings
-    end
-    # Ctrl-X to edit command buffer with $EDITOR
-    bind \cx edit_command_buffer
-end
-
-# fish dotenv function.
-# Execute `dotenv` will load environment variables from file `.env`.
-function dotenv --description 'Load environment variables from .env file'
-    set -l envfile ".env"
-
-    if [ (count $argv) -gt 0 ]
-        set envfile $argv[1]
-    end
-
-    if test -e $envfile
-        # If envfile exists, set env variables one by one.
-        for line in (cat $envfile | grep -e '[^[:space:]]' | grep -v '^#')
-            set -xg (echo $line | cut -d = -f 1) (echo $line | cut -d = -f 2-)
-        end
-
-        set -xg __DOTENV_ACTIVATE 1
-
-        # Rewrite _pure_prompt function
-        if not functions -q _old_pure_prompt
-            functions -c _pure_prompt _old_pure_prompt
-        end
-
-        # Insert dotenv prefix to prompt
-        function _pure_prompt  --inherit-variable envfile --argument-names exit_code
-            if set -q __DOTENV_ACTIVATE 
-                echo -n -s (set_color green) "(" $envfile ")" (set_color normal) " "
-            end
-            _old_pure_prompt $exit_code
-        end
-    end
-end
-
-function dotenv-erase --description 'Erase environment variables from given file'
-    set -l envfile ".env"
-
-    if [ (count $argv) -gt 0 ]
-        set envfile $argv[1]
-    end
-
-    if test -e $envfile
-        # If envfile exists, set env variables one by one.
-        for line in (cat $envfile | grep -e '[^[:space:]]' | grep -v '^#')
-            set --erase (echo $line | cut -d = -f 1)
-        end
-    end
-
-    set --erase __DOTENV_ACTIVATE
-end
-
-# Alias
-alias g "git"
-alias gst "git status"
-alias gc "git commit -ev"
-alias python python3
-alias pip pip3
-alias nvim ~/.bin/nvim-osx64/bin/nvim
-# exa => https://github.com/ogham/exa
-alias ls exa
-# ag =>  https://github.com/ggreer/the_silver_searcher
-alias ack ag
-alias sed gsed
+source ~/.fish_profile
