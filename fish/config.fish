@@ -43,6 +43,7 @@ set -x LC_ALL en_US.UTF-8
 
 set -x HOMEBREW_BOTTLE_DOMAIN https://mirrors.ustc.edu.cn/homebrew-bottles
 set -x HOMEBREW_NO_AUTO_UPDATE 1
+set -gx SDKMAN_DIR ~/.sdkman
 
 # $PATH environment variables
 set -e fish_user_paths
