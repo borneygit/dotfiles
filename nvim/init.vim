@@ -56,6 +56,7 @@ Plug 'Decodetalkers/csharpls-extended-lsp.nvim', { 'for': 'cs' }
 "C/C++
 Plug 'https://git.sr.ht/~p00f/godbolt.nvim' "Godbolt - CompilerExplorer
 Plug 'skywind3000/vim-cppman', { 'for': 'cpp' }
+Plug 'Freed-Wu/cppinsights.vim'
 
 call plug#end()
 "End Plugins -----------------------------------------------  }}}
