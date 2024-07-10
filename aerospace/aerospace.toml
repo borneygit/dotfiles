@@ -101,7 +101,7 @@ alt-w = 'mode service'
 [mode.service.binding]
 esc = 'mode main'
 enter = 'mode main'
-alt-w = 'mode main'
+alt-w = 'mode service' # in case of 'alt-w' re-enter this mode
 
 r = ['reload-config', 'mode main'] # reset layout
 
@@ -109,6 +109,12 @@ h = 'focus left'
 j = 'focus down'
 k = 'focus up'
 l = 'focus right'
+
+# in case of: you think it's in main mode now, but we just makes it works and back to main.
+alt-h = ['focus left', 'mode main']
+alt-j = ['focus down', 'mode main']
+alt-k = ['focus up', 'mode main']
+alt-l = ['focus right', 'mode main']
 
 shift-h = ['move left', 'mode main']
 shift-j = ['move down', 'mode main']
