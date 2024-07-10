@@ -88,11 +88,9 @@ alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
+
+alt-tab = 'workspace --wrap-around next'
+alt-shift-tab = 'workspace --wrap-around prev'
 
 alt-w = 'mode service'
 alt-r = 'mode resize'
@@ -134,6 +132,9 @@ space = [ 'layout tiles accordion', 'mode main']
 
 tab = 'workspace --wrap-around next'
 shift-tab = 'workspace --wrap-around prev'
+# alt-tab should also work in case of you think you're in main mode etc.
+alt-tab = 'workspace --wrap-around next'
+alt-shift-tab = 'workspace --wrap-around prev'
 
 n = ['workspace --wrap-around next', 'mode main']
 p = ['workspace --wrap-around prev', 'mode main']
@@ -142,21 +143,11 @@ p = ['workspace --wrap-around prev', 'mode main']
 2 = 'workspace 2'
 3 = 'workspace 3'
 4 = 'workspace 4'
-5 = 'workspace 5'
-6 = 'workspace 6'
-7 = 'workspace 7'
-8 = 'workspace 8'
-9 = 'workspace 9'
 
 shift-1 = ['move-node-to-workspace 1', 'workspace 1', 'mode main']
 shift-2 = ['move-node-to-workspace 2', 'workspace 2', 'mode main']
 shift-3 = ['move-node-to-workspace 3', 'workspace 3', 'mode main']
 shift-4 = ['move-node-to-workspace 4', 'workspace 4', 'mode main']
-shift-5 = ['move-node-to-workspace 5', 'workspace 5', 'mode main']
-shift-6 = ['move-node-to-workspace 6', 'workspace 6', 'mode main']
-shift-7 = ['move-node-to-workspace 7', 'workspace 7', 'mode main']
-shift-8 = ['move-node-to-workspace 8', 'workspace 8', 'mode main']
-shift-9 = ['move-node-to-workspace 9', 'workspace 9', 'mode main']
 
 shift-semicolon = ['exec-and-forget open -n /Applications/Alacritty.app', 'mode main']
 
