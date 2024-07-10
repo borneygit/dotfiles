@@ -56,13 +56,33 @@ set -gx fish_user_paths \
     /bin \
     $fish_user_paths
 
-# >>> vscode initialize >>>
-function code
-    set location "$PWD/$argv"
-    open -n -b "com.microsoft.VSCode" --args $location
-end
-# <<< vscode initialize <<<
+set -gx BIN ~/bin
+set -gx DOT_LOCAL_BIN ~/.local/bin
+
+set -gx PATH $BIN $PATH
+set -gx PATH $DOT_LOCAL_BIN $PATH
+
+set -gx LDFLAGS "-L/usr/local/opt/node@20/lib"
+set -gx CPPFLAGS "-I/usr/local/opt/node@20/include"
+
+set -gx JAVA_HOME $(/usr/libexec/java_home)
+set -gx HOMEBREW_NO_AUTO_UPDATE true
+set -gx PQ_LIB_DIR "$(brew --prefix libpq)/lib"
+set -gx SSLKEYLOGFILE ~/tls/sslkeylog.log
+set -gx HDC_SERVER_PORT 7035
+
+alias l 'ls -alh'
+alias la 'ls -a'
+alias lla 'ls -la'
+alias lt 'ls --tree'
+alias vim 'nvim'
+alias vi 'nvim'
+alias v 'nvim'
 
 rvm default
 
+set -gx RUSTUP_DIST_SERVER "https://rsproxy.cn"
+set -gx RUSTUP_UPDATE_ROOT "https://rsproxy.cn/rustup"
+
 source ~/.fish_profile
+source /opt/miniconda3/etc/fish/conf.d/conda.fish
