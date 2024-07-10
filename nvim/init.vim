@@ -307,7 +307,7 @@ au FileType cpp nmap M :execute 'Cppman ' . expand('<cword>') <CR>
 "-------------------- }}}
 
 "cppinsights ------------------------- {{{
-let g:cppinsights#extra_args = "-- -std=c++17"
+let g:cppinsights#extra_args = "-- -std=c++20"
 "-------------------- }}}
 
 "Custom :: WhiteSpaces Cleaning -------------------------------------- {{{

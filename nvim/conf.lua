@@ -65,7 +65,13 @@ require('lspconfig')['gopls'].setup({
   capabilities = capabilities,
 })
 
--- Python pyright & pylsp
+-- Python ruff, pyright & pylsp
+
+require('lspconfig').ruff.setup({
+  capabilities = capabilities,
+  autostart = true,
+})
+
 require('lspconfig')['pyright'].setup({
   capabilities = capabilities,
   autostart = true,
@@ -74,6 +80,10 @@ require('lspconfig')['pyright'].setup({
       useLibraryCodeForTypes = false,
       autoSearchPaths = true,
       diagnosticMode = 'openFilesOnly',
+      analysis = {
+        -- Ignore all files for analysis to exclusively use Ruff for linting
+        ignore = { '*' },
+      },
     },
   },
 })
@@ -82,6 +92,12 @@ require('lspconfig').pylsp.setup({
   capabilities = capabilities,
   autostart = false,
   settings = {
+    python = {
+      analysis = {
+        -- Ignore all files for analysis to exclusively use Ruff for linting
+        ignore = { '*' },
+      },
+    },
     pylsp = {
       configurationSources = {},
       plugins = {
@@ -185,6 +201,17 @@ vim.api.nvim_create_autocmd('FileType', {
     end, { silent = true })
   end,
 })
+
+-- Formatting on (pre) save.
+-- vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = augroup,
+  buffer = bufnr,
+  callback = function()
+    vim.lsp.buf.format({ async = false })
+  end,
+})
+
 -- End lsp key mapping }}}
 
 -- Plugin - nvimtools/none-ls.nvim {{{
@@ -209,49 +236,25 @@ null_ls.setup({
   -- add your sources / config options here
   sources = {
     -- Python
-    null_ls.builtins.formatting.black.with({
-      extra_args = { '--fast' },
-      runtime_condition = python_null_ls_condition,
-    }),
-    null_ls.builtins.formatting.isort.with({
-      extra_args = { '--profile', 'black', '--ca' },
-      runtime_condition = python_null_ls_condition,
-    }),
-    require('none-ls.diagnostics.ruff').with({
-      runtime_condition = python_null_ls_condition,
-    }),
+    --    null_ls.builtins.formatting.black.with({
+    --      extra_args = { '--fast' },
+    --      runtime_condition = python_null_ls_condition,
+    --    }),
+    --    null_ls.builtins.formatting.isort.with({
+    --      extra_args = { '--profile', 'black', '--ca' },
+    --      runtime_condition = python_null_ls_condition,
+    --    }),
     null_ls.builtins.diagnostics.mypy.with({
       extra_args = { '--follow-imports', 'silent' },
       runtime_condition = python_null_ls_condition,
       -- mypy runs slowly, we use it on-save instead of on-change.
       method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
     }),
-    -- C/C++
-    --    null_ls.builtins.diagnostics.cppcheck.with({
-    --      args = {
-    --        '--enable=warning,style,performance,portability',
-    --        '--inline-suppr',
-    --        '--template=gcc',
-    --        '--language=c++',
-    --        '--std=c++20',
-    --        '$FILENAME',
-    --      },
-    --      filetypes = { 'cpp' },
-    --      runtime_condition = clang_null_ls_condition,
-    --    }),
-    --    null_ls.builtins.diagnostics.cpplint.with({
-    --      runtime_condition = clang_null_ls_condition,
-    --      args = { '--filter=-runtime/references,-build/include_subdir', '$FILENAME' },
-    --    }),
     -- C/C++/CSharp
     null_ls.builtins.formatting.clang_format.with({
       filetypes = { 'c', 'cpp', 'proto', 'cs' },
       runtime_condition = clang_null_ls_condition,
     }),
-    -- null_ls.builtins.diagnostics.clang_check.with({
-    --   filetypes = { 'c', 'cpp' },
-    --   runtime_condition = clang_null_ls_condition,
-    -- }),
     -- Golang
     null_ls.builtins.formatting.gofmt,
     -- Rust
@@ -274,18 +277,18 @@ null_ls.setup({
     }),
   },
   debug = false,
-  on_attach = function(client, bufnr)
-    if client.supports_method('textDocument/formatting') then
-      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        group = augroup,
-        buffer = bufnr,
-        callback = function()
-          vim.lsp.buf.format({ async = true })
-        end,
-      })
-    end
-  end,
+  --  on_attach = function(client, bufnr)
+  --    if client.supports_method('textDocument/formatting') then
+  --      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+  --      vim.api.nvim_create_autocmd('BufWritePre', {
+  --        group = augroup,
+  --        buffer = bufnr,
+  --        callback = function()
+  --          vim.lsp.buf.format({ async = true })
+  --        end,
+  --      })
+  --    end
+  --  end,
 })
 
 -- }}}
