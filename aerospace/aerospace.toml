@@ -95,6 +95,8 @@ alt-shift-tab = 'workspace --wrap-around prev'
 alt-w = 'mode service'
 alt-r = 'mode resize'
 
+cmd-h = []  # disable mac's `hide the window` shortcut key
+
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
