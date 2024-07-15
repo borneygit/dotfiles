@@ -141,6 +141,7 @@ require('lspconfig').neocmake.setup({
 })
 
 -- Swift
+-- Better to use along with https://github.com/SolaWing/xcode-build-server on xcode projects.
 require('lspconfig').sourcekit.setup({
   capabilities = capabilities,
   filetypes = { 'swift', 'objective-c', 'objective-cpp' },
