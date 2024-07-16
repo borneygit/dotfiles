@@ -67,12 +67,12 @@ require('lspconfig')['gopls'].setup({
 
 -- Python ruff, pyright & pylsp
 
-require('lspconfig').ruff.setup({
+require('lspconfig').ruff.setup({ -- ruff for formatting and lint
   capabilities = capabilities,
   autostart = true,
 })
 
-require('lspconfig')['pyright'].setup({
+require('lspconfig')['pyright'].setup({ -- pyright for completion and go-to-definitions
   capabilities = capabilities,
   autostart = true,
   settings = {
@@ -88,7 +88,7 @@ require('lspconfig')['pyright'].setup({
   },
 })
 
-require('lspconfig').pylsp.setup({
+require('lspconfig').pylsp.setup({ -- As an alternative to pyright, sometimes pyright dies.
   capabilities = capabilities,
   autostart = false,
   settings = {
@@ -140,8 +140,7 @@ require('lspconfig').neocmake.setup({
   capabilities = capabilities,
 })
 
--- Swift
--- Better to use along with https://github.com/SolaWing/xcode-build-server on xcode projects.
+-- Swift: Better to use along with https://github.com/SolaWing/xcode-build-server on xcode projects.
 require('lspconfig').sourcekit.setup({
   capabilities = capabilities,
   -- filetypes = { 'swift', 'objective-c', 'objective-cpp' },
@@ -154,6 +153,7 @@ require('lspconfig').dartls.setup({
   capabilities = capabilities,
   root_dir = make_root_dir_function('pubspec.yaml', '.git'),
 })
+
 -- CSharp
 require('lspconfig')['csharp_ls'].setup({
   capabilities = capabilities,
@@ -172,58 +172,12 @@ require('lspconfig')['rust_analyzer'].setup({
 
 -- End LSP }}}
 
--- Lsp Key Mapping -- {{{
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'go,python,c,cpp,objc,objcpp,javascript,rust,lua,cs,swift,dart,typescript,typescriptreact',
-  callback = function()
-    vim.keymap.set('n', 'gd', function()
-      vim.cmd('split')
-      vim.lsp.buf.definition()
-    end, { silent = true })
-    vim.keymap.set('n', 'gv', function()
-      vim.cmd('vsplit')
-      vim.lsp.buf.definition()
-    end, { silent = true })
-    vim.keymap.set('n', 'gD', function()
-      vim.cmd('split')
-      vim.lsp.buf.declaration()
-    end, { silent = true })
-    vim.keymap.set('n', 'gr', function()
-      vim.cmd('split')
-      vim.lsp.buf.references()
-    end, { silent = true })
-    vim.keymap.set('n', 'gi', function()
-      vim.cmd('split')
-      vim.lsp.buf.implementation()
-    end, { silent = true })
-    vim.keymap.set('n', '<c-k>', function()
-      vim.lsp.buf.signature_help()
-    end, { silent = true })
-    vim.keymap.set('n', 'K', function()
-      vim.lsp.buf.hover()
-    end, { silent = true })
-  end,
-})
-
--- Formatting on (pre) save.
--- vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-vim.api.nvim_create_autocmd('BufWritePre', {
-  group = augroup,
-  buffer = bufnr,
-  callback = function()
-    vim.lsp.buf.format({ async = false })
-  end,
-})
-
--- End lsp key mapping }}}
-
 -- Plugin - nvimtools/none-ls.nvim {{{
 
 local null_ls = require('null-ls')
 
-local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
-
 function python_null_ls_condition(params)
+  -- Don't run diagnostics stuff on these files: system and 3rd-party libraries.
   return not (
     params.bufname:match('site-packages')
     or params.bufname:match('.pyenv')
@@ -232,6 +186,7 @@ function python_null_ls_condition(params)
 end
 
 function clang_null_ls_condition(params)
+  -- Skip to let clang to work for MacOSX system or vcpkg libraries, which are huge and may slow-down nvim.
   return not (params.bufname:match('MacOSX.sdk') or params.bufname:match('Toolchains') or params.bufname:match('vcpkg'))
 end
 
@@ -276,23 +231,96 @@ null_ls.setup({
 
 -- }}}
 
--- Lsp Hover & SignatureHelp {{{
+-- Auto commands on Lsp Attach
+-- server_ready is deprecated since 0.10, use LspAttach instead
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    -- Lsp Key Mapping -- {{{
+    ---- gd: Split and Go to Definition
+    vim.keymap.set('n', 'gd', function()
+      vim.cmd('split')
+      vim.lsp.buf.definition()
+    end, { silent = true, buffer = true })
+    ---- gv: VSplit and Go to Definition
+    vim.keymap.set('n', 'gv', function()
+      vim.cmd('vsplit')
+      vim.lsp.buf.definition()
+    end, { silent = true, buffer = true })
+    ---- gD: Split and Go to Declaration
+    vim.keymap.set('n', 'gD', function()
+      vim.cmd('split')
+      vim.lsp.buf.declaration()
+    end, { silent = true, buffer = true })
+    ---- gr: Split and show References of current symbol
+    vim.keymap.set('n', 'gr', function()
+      vim.cmd('split')
+      vim.lsp.buf.references()
+    end, { silent = true, buffer = true })
+    ---- gi: Split and show Implementations
+    vim.keymap.set('n', 'gi', function()
+      vim.cmd('split')
+      vim.lsp.buf.implementation()
+    end, { silent = true, buffer = true })
+    ---- Ctrl-k: Show SignatureHelp
+    vim.keymap.set('n', '<c-k>', function()
+      vim.lsp.buf.signature_help()
+    end, { silent = true, buffer = true })
+    ---- K: Hover, something like usage manual, introduction stuffs.
+    vim.keymap.set('n', 'K', function()
+      vim.lsp.buf.hover()
+    end, { silent = true, buffer = true })
+    -- End lsp key mapping }}}
 
--- Single border for hover floating window.
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = 'single',
+    -- Show Diagnostics on cursor hold for current line
+    vim.api.nvim_create_autocmd('CursorHold', {
+      pattern = '*',
+      callback = function()
+        -- Instead of vim.diagnostic.open_float(0, { scope = 'line', source = true, focus = false })
+        -- I don't like diagnostics messages show directly on the screen near my code and cursor.
+        -- This may mess up my editing. So I echo it to the command-bar.
+        local curline = vim.api.nvim_win_get_cursor(0)[1]
+        local diagnostics_list = vim.diagnostic.get(args.buf, { lnum = curline - 1 })
+        if #diagnostics_list > 0 then
+          -- We just show the first diagnostics message.
+          -- We already have `severity_sort` set, so it's the most serious one.
+          local _, first = next(diagnostics_list)
+          -- nvim_echo receives a chunck of pairs, each pair has the structure { message, HiGroup }
+          -- Here we use the colors of Warnings.
+          -- The `source` is the linter stuff which produces this message (e.g. mypy)
+          vim.api.nvim_echo({ { first.source .. ': ' .. first.message, 'WarningMsg' } }, false, {})
+        end
+      end,
+    })
+    -- Formatting on (pre) save. {{{
+    -- vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
+
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = augroup,
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format({ async = false })
+      end,
+    }) -- }}}
+
+    -- Lsp Hover & SignatureHelp Configurations {{{
+    -- Single border for hover floating window.
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
+      border = 'single',
+    })
+
+    -- Single border for signature help window.
+    vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+      border = 'single',
+    })
+
+    -- Single border for :LspInfo window.
+    require('lspconfig.ui.windows').default_options = {
+      border = 'single',
+    }
+    -- }}}
+  end,
 })
-
--- Single border for signature help window.
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-  border = 'single',
-})
-
--- Single border for :LspInfo window.
-require('lspconfig.ui.windows').default_options = {
-  border = 'single',
-}
--- }}}
 
 -- Plugin erhickey/sig-window-nvim {{{
 -- https://github.com/erhickey/sig-window-nvim
@@ -328,17 +356,8 @@ vim.diagnostic.config({
   float = { border = 'none' },
   underline = true,
   update_in_insert = false,
+  -- higher severities are displayed before lower severities
   severity_sort = true,
-})
-
--- Show Diagnostics on cursor hold for current line
-vim.api.nvim_create_autocmd('CursorHold', {
-  pattern = '*',
-  callback = function()
-    if vim.lsp.buf.server_ready() then
-      vim.diagnostic.open_float(0, { scope = 'line', source = true })
-    end
-  end,
 })
 
 -- Add Diagnostics to Quickfix Window.
@@ -394,6 +413,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Call :Quickfix to enter a quickfix window for all diagnostics under current buffer.
 vim.api.nvim_create_user_command('Quickfix', function(opts)
   vim.g._enable_push_diagnostics_to_quickfix = true
   -- Push at once if diagnostics is not empty.
@@ -442,6 +462,7 @@ function _G.lsp_progress() ---- 0.9 version
   end
 end
 
+-- neovim 0.10 version, since this version get_active_clients and get_progress_messages no longer work.
 function lsp_progress_v010()
   local clients = vim.lsp.get_clients()
   if #clients == 0 then
@@ -488,14 +509,14 @@ require('lualine').setup({
     lualine_b = {
       'branch',
       'diff',
+      'filename',
+    },
+    lualine_c = {
       {
         'diagnostics',
         -- Show diagnostics even if there are none.
         always_visible = true,
       },
-    },
-    lualine_c = {
-      'filename',
       {
         'lsp_progress()',
         color = 'Debug',
