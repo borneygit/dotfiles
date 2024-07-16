@@ -374,5 +374,11 @@ command! -range ToPascal :s/\%V_\([^_]\)/\u\1/e | s/\%V\<./\u&/e
 command! -range ToUpperSnake :s/\%V\(\l\)\(\u\)/\1_\2/e | s/\%V\w\+/\U&/e
 "--- }}}
 
-"Load lua configs
-luafile ~/.config/nvim/conf.lua
+"I don't like everything in lua, vimscript command sometimes goes more concise and clean.
+"Load lua configs.
+luafile ~/.config/nvim/lua/conf.treesitter.lua
+luafile ~/.config/nvim/lua/conf.lsp.lua
+luafile ~/.config/nvim/lua/conf.nonels.lua
+luafile ~/.config/nvim/lua/conf.quickfix.lua
+luafile ~/.config/nvim/lua/conf.statusline.lua
+luafile ~/.config/nvim/lua/conf.misc.lua
