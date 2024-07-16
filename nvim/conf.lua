@@ -120,7 +120,7 @@ require('lspconfig').pylsp.setup({
 -- C/C++
 require('lspconfig')['clangd'].setup({
   capabilities = capabilities,
-  filetypes = { 'c', 'cpp' },
+  filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
   cmd = {
     'clangd',
     '--offset-encoding=utf-16',
@@ -144,7 +144,8 @@ require('lspconfig').neocmake.setup({
 -- Better to use along with https://github.com/SolaWing/xcode-build-server on xcode projects.
 require('lspconfig').sourcekit.setup({
   capabilities = capabilities,
-  filetypes = { 'swift', 'objective-c', 'objective-cpp' },
+  -- filetypes = { 'swift', 'objective-c', 'objective-cpp' },
+  filetypes = { 'swift' },
   cmd = { 'xcrun', '--toolchain', 'swift', 'sourcekit-lsp' },
 })
 
@@ -173,7 +174,7 @@ require('lspconfig')['rust_analyzer'].setup({
 
 -- Lsp Key Mapping -- {{{
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'go,python,c,cpp,javascript,rust,lua,cs,swift,dart,typescript,typescriptreact',
+  pattern = 'go,python,c,cpp,objc,objcpp,javascript,rust,lua,cs,swift,dart,typescript,typescriptreact',
   callback = function()
     vim.keymap.set('n', 'gd', function()
       vim.cmd('split')
@@ -254,7 +255,7 @@ null_ls.setup({
     }),
     -- C/C++/CSharp
     null_ls.builtins.formatting.clang_format.with({
-      filetypes = { 'c', 'cpp', 'proto', 'cs' },
+      filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'proto', 'cs' },
       runtime_condition = clang_null_ls_condition,
     }),
     -- Golang
@@ -350,18 +351,13 @@ vim.diagnostic.config({
   severity_sort = true,
 })
 
--- Show Diagnostics on the command line when hover cursor.
-local echo_diagnostics = require('echo-diagnostics')
-
-echo_diagnostics.setup({
-  show_diagnostic_number = true,
-  show_diagnostic_source = false,
-})
-
+-- Show Diagnostics on cursor hold for current line
 vim.api.nvim_create_autocmd('CursorHold', {
   pattern = '*',
   callback = function()
-    echo_diagnostics.echo_line_diagnostic()
+    if vim.lsp.buf.server_ready() then
+      vim.diagnostic.open_float(0, { scope = 'line', source = true })
+    end
   end,
 })
 
