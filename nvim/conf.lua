@@ -196,6 +196,7 @@ null_ls.setup({
     -- Python
     null_ls.builtins.diagnostics.mypy.with({
       extra_args = { '--follow-imports', 'silent' },
+      prefer_local = '~/.pyenv/shims',
       runtime_condition = python_null_ls_condition,
       -- mypy runs slowly, we use it on-save instead of on-change.
       method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
