@@ -516,7 +516,10 @@ require('lualine').setup({
     },
     lualine_c = {
       'filename',
-      'lsp_progress()',
+      {
+        'lsp_progress()',
+        color = 'Debug',
+      },
     },
   },
   -- Having a single statusline instead of each for every window.
