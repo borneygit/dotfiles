@@ -239,14 +239,6 @@ null_ls.setup({
   -- add your sources / config options here
   sources = {
     -- Python
-    --    null_ls.builtins.formatting.black.with({
-    --      extra_args = { '--fast' },
-    --      runtime_condition = python_null_ls_condition,
-    --    }),
-    --    null_ls.builtins.formatting.isort.with({
-    --      extra_args = { '--profile', 'black', '--ca' },
-    --      runtime_condition = python_null_ls_condition,
-    --    }),
     null_ls.builtins.diagnostics.mypy.with({
       extra_args = { '--follow-imports', 'silent' },
       runtime_condition = python_null_ls_condition,
@@ -280,18 +272,6 @@ null_ls.setup({
     }),
   },
   debug = false,
-  --  on_attach = function(client, bufnr)
-  --    if client.supports_method('textDocument/formatting') then
-  --      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-  --      vim.api.nvim_create_autocmd('BufWritePre', {
-  --        group = augroup,
-  --        buffer = bufnr,
-  --        callback = function()
-  --          vim.lsp.buf.format({ async = true })
-  --        end,
-  --      })
-  --    end
-  --  end,
 })
 
 -- }}}
