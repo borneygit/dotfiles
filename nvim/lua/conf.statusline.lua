@@ -69,11 +69,7 @@ require('lualine').setup({
   },
   sections = {
     lualine_b = {
-      'branch',
-      'diff',
       'filename',
-    },
-    lualine_c = {
       {
         'diagnostics',
         -- Show diagnostics even if there are none.
@@ -83,6 +79,13 @@ require('lualine').setup({
         'lsp_progress()',
         color = 'Debug',
       },
+    },
+    lualine_x = {
+      'diff',
+      'branch',
+      'encoding',
+      'fileformat',
+      'filetype',
     },
   },
   -- Having a single statusline instead of each for every window.
