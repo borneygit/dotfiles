@@ -23,7 +23,6 @@ Plug 'NLKNguyen/papercolor-theme' "My favorite colorscheme.
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } "Famous file explorer plugin, lazy load on comand NERDTreeToggle
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' } "NERDTree plugin which shows git status flags, lazy load on comand NERDTreeToggle
 Plug 'nvim-lualine/lualine.nvim' "lua version statusline.
-Plug 'jayflo/vim-skip' "Binary-search inline cursor movement.
 Plug 'windwp/nvim-autopairs' "Close pair ()[]{} etc. automatically.
 Plug 'mg979/vim-visual-multi' "Multiple cursors plugin for vim/neovim.
 Plug 'wellle/targets.vim' "Vim plugin that provides additional text objects
@@ -382,3 +381,4 @@ luafile ~/.config/nvim/lua/conf.nonels.lua
 luafile ~/.config/nvim/lua/conf.quickfix.lua
 luafile ~/.config/nvim/lua/conf.statusline.lua
 luafile ~/.config/nvim/lua/conf.misc.lua
+luafile ~/.config/nvim/lua/conf.skip.lua
