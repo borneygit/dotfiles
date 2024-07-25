@@ -118,5 +118,6 @@ keybinds {
         bind "s" { SwitchToMode "EnterSearch"; SearchInput 0; }
         // 放大分屏
         bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
+        bind "k" { Clear; }
     }
 }
