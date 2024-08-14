@@ -15,7 +15,7 @@ set pure_show_system_time false
 set -g async_prompt_functions _pure_prompt_git
 # git prompt settings
 set -g __fish_git_prompt_show_informative_status 1
-set -g __fish_git_prompt_showdirtystate 'yes'
+set -g __fish_git_prompt_showdirtystate yes
 set -g __fish_git_prompt_char_stateseparator ' '
 set -g __fish_git_prompt_char_dirtystate "✖"
 set -g __fish_git_prompt_char_cleanstate "✔"
@@ -32,7 +32,8 @@ set fish_greeting ""
 
 # don't describe the command for darwin
 # https://github.com/fish-shell/fish-shell/issues/6270
-function __fish_describe_command; end
+function __fish_describe_command
+end
 
 # Basic environments
 set -x SHELL fish
@@ -56,11 +57,11 @@ set -gx fish_user_paths \
     /bin \
     $fish_user_paths
 
-set -gx BIN ~/bin
-set -gx DOT_LOCAL_BIN ~/.local/bin
-
-set -gx PATH $BIN $PATH
-set -gx PATH $DOT_LOCAL_BIN $PATH
+set -gx fish_user_paths \
+    ~/bin \
+    ~/.local/bin \
+    /usr/local/go/bin \
+    $fish_user_paths
 
 set -gx LDFLAGS "-L/usr/local/opt/node@20/lib"
 set -gx CPPFLAGS "-I/usr/local/opt/node@20/include"
@@ -71,13 +72,21 @@ set -gx PQ_LIB_DIR "$(brew --prefix libpq)/lib"
 set -gx SSLKEYLOGFILE ~/tls/sslkeylog.log
 set -gx HDC_SERVER_PORT 7035
 
+alias http_proxy 'export http_proxy=http://127.0.0.1:7890'
+alias https_proxy 'export https_proxy=http://127.0.0.1:7890'
+alias all_proxy 'export all_proxy=http://127.0.0.1:7890'
+alias unhttp_proxy 'unset http_proxy'
+alias unhttps_proxy 'unset https_proxy'
+alias unall_proxy 'unset all_proxy'
+alias proxy_test 'curl -v google.com'
+
 alias l 'ls -alh'
 alias la 'ls -a'
 alias lla 'ls -la'
 alias lt 'ls --tree'
-alias vim 'nvim'
-alias vi 'nvim'
-alias v 'nvim'
+alias vim nvim
+alias vi nvim
+alias v nvim
 
 rvm default
 
@@ -86,3 +95,4 @@ set -gx RUSTUP_UPDATE_ROOT "https://rsproxy.cn/rustup"
 
 source ~/.fish_profile
 source /opt/miniconda3/etc/fish/conf.d/conda.fish
+starship init fish | source
