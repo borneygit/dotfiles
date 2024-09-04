@@ -5,7 +5,7 @@ local tool = require("tool")
 local vim = tool.vim
 local opt = tool.vim.opt
 
-vim.g.mapleader = ","
+vim.g.mapleader = " "
 
 
 --默认的字符编码
