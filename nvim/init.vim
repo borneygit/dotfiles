@@ -20,6 +20,7 @@ let g:pyindent_disable_parentheses_indenting = 1
 call plug#begin('~/.config/nvim/plugs')
 
 Plug 'NLKNguyen/papercolor-theme' "My favorite colorscheme.
+Plug 'olimorris/onedarkpro.nvim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } "Famous file explorer plugin, lazy load on comand NERDTreeToggle
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' } "NERDTree plugin which shows git status flags, lazy load on comand NERDTreeToggle
 Plug 'nvim-lualine/lualine.nvim' "lua version statusline.
