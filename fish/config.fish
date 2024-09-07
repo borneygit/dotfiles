@@ -33,23 +33,19 @@ set -x N_PREFIX $HOME/.n
 set -e fish_user_paths
 set -gx fish_user_paths \
     $HOME/.pyenv/shims \
+    /opt/homebrew/opt/llvm/bin \
+    /opt/homebrew/opt/ruby/bin \
+    /opt/homebrew/opt/n/bin \
     $GOPATH/bin \
     $HOME/.cargo/bin \
-    $HOME/.dotnet/tools \
+    /opt/homebrew/bin \
     $N_PREFIX/bin \
-    $HOME/dev/src/flutter/bin \
-    /usr/local/lib/ruby/gems/3.4.2/bin \
-    /usr/local/opt/ruby/bin \
-    /usr/local/opt/llvm/bin \
-    # binutils bin may break some clang builds
-    # /usr/local/opt/binutils/bin \
     /usr/local/sbin \
     /usr/local/bin \
     /usr/sbin \
     /usr/bin \
     /sbin \
     /bin \
-    $HOME/.fzf/bin \
     $fish_user_paths
 
 # Config files directory.
@@ -64,6 +60,7 @@ source $HOME/.oo/env.fish
 set -x HOMEBREW_NO_AUTO_UPDATE 1
 
 # https://github.com/junegunn/fzf
+fzf --fish | source
 set -x FZF_DEFAULT_COMMAND 'fd --type f --exclude .git'
 
 # Rewrite Greeting message
@@ -164,7 +161,7 @@ alias gst "git status"
 alias gc "git commit -ev"
 alias python python3
 alias pip pip3
-alias nvim ~/.bin/nvim-osx64/bin/nvim
+alias nvim ~/.bin/nvim/bin/nvim
 # exa => https://github.com/ogham/exa
 alias ls exa
 # ag =>  https://github.com/ggreer/the_silver_searcher
