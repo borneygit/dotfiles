@@ -1,0 +1,9 @@
+" General Settings
+set update.lastchecktime 1725786400509
+set configversion 2.0
+set theme quakelight
+set newtab about:blank
+set editorcmd /Applications/Alacritty.app/Con*tents/MacOS/alacritty -e /Users/hit9/.bin/nvim/bin/nvim -f
+
+" For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
+" vim: set filetype=tridactyl
