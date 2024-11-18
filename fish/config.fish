@@ -92,5 +92,10 @@ set -gx RUSTUP_DIST_SERVER "https://rsproxy.cn"
 set -gx RUSTUP_UPDATE_ROOT "https://rsproxy.cn/rustup"
 
 source ~/.fish_profile
-source /opt/miniconda3/etc/fish/conf.d/conda.fish
+source ~/miniconda3/etc/fish/conf.d/conda.fish
 starship init fish | source
+
+set -gx LIBRARY_PATH $LIBRARY_PATH:/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
+# set -gx CC clang #brew install llvm
+# set -gx CC x86_64-w64-mingw32-gcc #brew install mingw-w64
+# set -gx CC gcc #brew install mingw-w64

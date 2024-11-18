@@ -29,3 +29,9 @@ roots = ["setup.py", "setup.cfg", "pyproject.toml"]
 comment-token = "#"
 language-servers = [ "pyright" ]
 indent = { tab-width = 4, unit = "    " }
+
+[[language]]
+name = "dart"
+
+[[language]]
+name = "java"
