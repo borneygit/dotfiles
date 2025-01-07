@@ -104,8 +104,9 @@ require('lspconfig')['clangd'].setup({
   cmd = {
     'clangd',
     '--offset-encoding=utf-16',
-    '-j=4',
-    '--background-index',
+    '-j=1',
+    -- '--background-index',
+    '--background-index-priority=low',
     '--pch-storage=memory',
     -- by default, clang-tidy use -checks=clang-diagnostic-*,clang-analyzer-*
     -- to add more checks, create .clang-tidy file in the root directory
@@ -190,6 +191,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', function()
       vim.lsp.buf.hover()
     end, { silent = true, buffer = true })
+
     -- End lsp key mapping }}}
 
     -- Show Diagnostics on cursor hold for current line

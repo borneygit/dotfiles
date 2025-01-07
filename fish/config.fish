@@ -17,7 +17,7 @@ set -g async_prompt_functions _pure_prompt_git
 # Basic environments
 set -x SHELL fish
 set -x TERM screen-256color
-set -x EDITOR nvim
+set -x EDITOR /Users/hit9/.bin/nvim/bin/nvim
 set -x LANG en_US.UTF-8
 set -x LC_ALL en_US.UTF-8
 
